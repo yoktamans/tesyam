@@ -21,6 +21,8 @@
     .header img {
       height: 40px;
       cursor: pointer;
+      max-width: 100%;
+      height: auto;
     }
     .container {
       max-width: 400px;
@@ -29,6 +31,8 @@
       border-radius: 8px;
       border: 1px solid #eee;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
+      background-color: white;
     }
     label {
       font-weight: bold;
@@ -43,6 +47,7 @@
       border: 1px solid #aaa;
       border-radius: 4px;
       font-size: 16px;
+      box-sizing: border-box;
     }
     .choice-buttons {
       display: flex;
@@ -64,6 +69,7 @@
       font-weight: bold;
       user-select: none;
       transition: background-color 0.3s, color 0.3s;
+      box-sizing: border-box;
     }
     .choice-buttons input[type="radio"]:checked + label {
       background-color: #880e4f;
@@ -100,6 +106,7 @@
       border-left: 5px solid #880e4f;
       margin-top: 10px;
       font-size: 14px;
+      box-sizing: border-box;
     }
     .success-container {
       text-align: center;
@@ -116,6 +123,43 @@
     .checkmark {
       font-size: 60px;
       color: #4CAF50;
+    }
+
+    /* Mobil uyumluluk için medya sorguları */
+    @media (max-width: 480px) {
+      .container {
+        max-width: 90%;
+        margin: 20px auto;
+        padding: 15px;
+      }
+      .choice-buttons label {
+        margin: 0 3px;
+        padding: 10px 0;
+        font-size: 14px;
+      }
+      input[type="text"],
+      input[type="number"],
+      input[type="tel"] {
+        font-size: 14px;
+        padding: 8px;
+      }
+      .login-button {
+        font-size: 14px;
+        padding: 10px;
+      }
+      .header {
+        padding: 5px 10px;
+        height: 45px;
+      }
+      .header img {
+        height: 35px;
+      }
+      .success-container {
+        padding: 30px 10px;
+      }
+      .checkmark {
+        font-size: 50px;
+      }
     }
   </style>
 </head>
