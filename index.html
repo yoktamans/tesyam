@@ -169,8 +169,17 @@
       display: none !important;
     }
 
-    /* Küçük ekranlarda */
-    @media (max-width: 400px) {
+    /* Küçük ekranlarda düzenleme */
+    @media (max-width: 480px) {
+      .container {
+        min-height: auto; /* min-height kaldırıldı */
+        padding-bottom: 24px; /* alt boşluk bırakıldı */
+      }
+      .success-container {
+        min-height: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
       .login-button {
         font-size: 18px;
         padding: 14px 0;
